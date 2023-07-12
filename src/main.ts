@@ -15,6 +15,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+  // write a yaml file based on swagger doc
   const yamlString = yaml.dump(document);
   fs.writeFileSync('swagger.yaml', yamlString);
   await app.listen(3000);
