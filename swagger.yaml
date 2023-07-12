@@ -1,0 +1,156 @@
+openapi: 3.0.0
+paths:
+  /todos:
+    post:
+      operationId: TodosController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTodoDto'
+      responses:
+        '201':
+          description: create todo .
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          description: 'bad request '
+        '401':
+          description: unauthorized .
+      tags: &ref_0
+        - todos
+    get:
+      operationId: TodosController_findAll
+      parameters: []
+      responses:
+        '200':
+          description: get todos .
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+        '401':
+          description: unauthorized .
+      tags: *ref_0
+  /todos/{id}:
+    get:
+      operationId: TodosController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: get todo by id  .
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '401':
+          description: unauthorized .
+      tags: *ref_0
+    put:
+      operationId: TodosController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTodoDto'
+      responses:
+        '200':
+          description: update todo by id  .
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          description: unauthorized .
+      tags: *ref_0
+    delete:
+      operationId: TodosController_remove
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: remove todo by id  .
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          description: unauthorized .
+      tags: *ref_0
+info:
+  title: todo-app
+  description: ''
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    CreateTodoDto:
+      type: object
+      properties:
+        deadline:
+          format: date-time
+          type: string
+        catergory:
+          type: string
+        title:
+          type: string
+        discription:
+          type: string
+        isDone:
+          type: boolean
+      required:
+        - catergory
+        - title
+    Todo:
+      type: object
+      properties:
+        id:
+          type: number
+        deadline:
+          format: date-time
+          type: string
+        catergory:
+          type: string
+        title:
+          type: string
+        discription:
+          type: string
+        isDone:
+          type: boolean
+        user_id:
+          type: string
+      required:
+        - id
+        - deadline
+        - catergory
+        - title
+        - discription
+        - isDone
+        - user_id
+    UpdateTodoDto:
+      type: object
+      properties: {}
