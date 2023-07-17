@@ -11,9 +11,9 @@ export class TodosService {
     private todoModel: typeof Todo,
   ) {}
 
-  async create(todoObj: CreateTodoDto) {
+  async create(user_id: string, todoObj: CreateTodoDto) {
     //TODO : is checking of todo existing for this user needed ?
-    return await this.todoModel.create({ ...todoObj });
+    return await this.todoModel.create({ ...todoObj, user_id });
   }
 
   async findAll(): Promise<Todo[]> {

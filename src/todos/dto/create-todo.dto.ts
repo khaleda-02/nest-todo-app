@@ -3,7 +3,6 @@ import {
   MinDate,
   IsDateString,
   IsNotEmpty,
-  IsDate,
   IsBoolean,
 } from 'class-validator';
 //Todo : make an enum for cater

@@ -22,7 +22,6 @@ export class Todo extends Model {
   @Column({ defaultValue: false })
   isDone: boolean;
 
-  //! default value is just for development
-  @Column({ defaultValue: 'user_id' })
+  @Column
   user_id: string;
 }

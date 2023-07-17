@@ -1,21 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { User } from './user.model';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectModel(User)
+    private userModel: typeof User,
+  ) {}
+
+  async create(createUserDto: CreateUserDto) {
+    //todo -> encrypt password
+    //! todo : the app crahing when duplicated usernames
+    const { dataValues: user } = await this.userModel.create({
+      ...createUserDto,
+    });
+    return user;
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findOne(username: string): Promise<User> {
+    const { dataValues: user } = await this.userModel.findOne({
+      where: { username },
+    });
+    return user;
   }
 
-  findOne(username: string) {
-    return { password: 'test', age: 34, testData: true, username };
-  }
-
+  // todo
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }

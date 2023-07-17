@@ -3,10 +3,9 @@ import { TodosService } from './todos.service';
 import { TodosController } from './todos.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Todo } from './todo.model';
-import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [SequelizeModule.forFeature([Todo])], //AuthModule
+  imports: [SequelizeModule.forFeature([Todo])], //todo : AuthModulet
   controllers: [TodosController],
   providers: [TodosService],
 })

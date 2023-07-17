@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Todo } from './todos/todo.model';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { User } from './user/user.model';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { UserModule } from './user/user.module';
     SequelizeModule.forRoot({
       dialect: 'mysql',
       ...databaseConfig,
-      models: [Todo],
+      models: [Todo, User],
       autoLoadModels: true,
       synchronize: true,
     }),
