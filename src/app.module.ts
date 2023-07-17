@@ -14,7 +14,7 @@ import { User } from './user/user.model';
     SequelizeModule.forRoot({
       dialect: 'mysql',
       ...databaseConfig,
-      models: [Todo, User],
+      models: [Todo, User ],
     }),
     TodosModule,
     AuthModule,
