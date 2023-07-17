@@ -15,8 +15,6 @@ import { User } from './user/user.model';
       dialect: 'mysql',
       ...databaseConfig,
       models: [Todo, User],
-      autoLoadModels: true,
-      synchronize: true,
     }),
     TodosModule,
     AuthModule,
