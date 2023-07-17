@@ -1,4 +1,12 @@
-import { Column, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  ForeignKey,
+  Model,
+  PrimaryKey,
+  Table,
+} from 'sequelize-typescript';
+import { User } from './../user/user.model';
 @Table
 export class Todo extends Model {
   @PrimaryKey
@@ -24,4 +32,5 @@ export class Todo extends Model {
 
   @Column
   user_id: string;
+  
 }
