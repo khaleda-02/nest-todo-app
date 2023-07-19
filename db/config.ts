@@ -1,5 +1,4 @@
-import config from '../config'
+import { config as configDev } from '../config/config.development';
+import { config as configTest } from '../config/config.test';
 
-let databaseConfig;
-
-config.forEach((value)=>(databaseConfig = value().database? value().database : databaseConfig))
+export default process.env.NODE_ENV === 'development' ?   configDev: configTest;
