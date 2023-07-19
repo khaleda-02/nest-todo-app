@@ -7,13 +7,17 @@ import { Todo } from './todos/todo.model';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { User } from './user/user.model';
-import configDevelopment  from 'config/config.development';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     SequelizeModule.forRoot({
-     ...configDevelopment,
+      dialect: 'mysql',
+      host:'127.0.0.1',
+      port:3306,
+      username: 'root' ,
+      password: 'Root#123',
+      database:'todos',
       models: [Todo, User ],
       synchronize: true,
       autoLoadModels : true 
