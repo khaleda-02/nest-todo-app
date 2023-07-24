@@ -1,29 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
+import { USER_REPOSITORY } from '../shared/constants/index';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User)
-    private userModel: typeof User,
+    @Inject(USER_REPOSITORY)
+    private userRepository: typeof User,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) : Promise<User | null > {
     //todo -> encrypt password
-    //! todo : the app crahing when duplicated usernames
-    const { dataValues: user } = await this.userModel.create({
-      ...createUserDto,
-    });
-    return user;
+    try{
+      const { dataValues: user } = await this.userRepository.create({
+        ...createUserDto,
+      });
+      return user;
+    }catch(err){throw new BadRequestException();}
   }
-
-  async findOne(username: string): Promise<User> {
-    const { dataValues: user } = await this.userModel.findOne({
+  
+  async findOne(username: string): Promise<User | null > {
+    const {dataValues : user} = await this.userRepository.findOne({
       where: { username },
     });
+    if (!user) {
+      throw new UnauthorizedException({ statusCode : 401 ,
+        message : 'wrong username or password'
+      });
+    }
     return user;
   }
 

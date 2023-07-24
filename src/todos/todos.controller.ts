@@ -13,24 +13,22 @@ import {
 import { TodosService } from './todos.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
-import { Todo } from './todo.model';
-import { JwtGuard } from './../auth/guards/jwt.guard';
 
-@UseGuards(JwtGuard)
+// @UseGuards(JwtGuard)
 @Controller('todos')
 export class TodosController {
   constructor(private readonly todosService: TodosService) {}
 
   @Post()
   create(@Body() CreateTodoDto: CreateTodoDto, @Request() req) {
-    console.log('user from req , in todo controller ', req.user);
-    const { user_id } = req.user;
-    return this.todosService.create(user_id, CreateTodoDto);
+    const { id } = req.user;
+    return this.todosService.create(id, CreateTodoDto);
   }
 
   @Get()
-  findAll() {
-    return this.todosService.findAll();
+  findAll( @Request() req) {
+    const { id } = req.user;
+    return this.todosService.findAll(id);
   }
 
   @Get(':id')

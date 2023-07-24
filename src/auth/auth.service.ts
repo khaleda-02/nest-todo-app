@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -16,24 +16,25 @@ export class AuthService {
     const user = await this.userService.findOne(username);
     if (user && user.password == password) {
       const { password, id, createdAt, updatedAt, ...rest } = user;
+      console.log(rest , ' in validate fun , in auth service , payload of login');
       return rest;
     }
   }
 
   login(payload) {
-    console.log(payload);
-
+    const accessToken = this.jwtService.sign(payload);
     return {
-      accessToken: this.jwtService.sign(payload),
+      accessToken
     };
   }
 
   async register(user: CreateUserDto) {
     const { id, password, createdAt, updatedAt, ...rest } =
-      await this.userService.create(user);
+      await this.userService.create(user);      
+      const accessToken = this.jwtService.sign(rest);
     return {
       ...rest,
-      accessToken: this.jwtService.sign(rest),
+      accessToken 
     };
   }
 }

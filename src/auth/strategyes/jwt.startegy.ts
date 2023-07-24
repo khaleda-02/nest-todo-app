@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { AuthService } from '../auth.service';
+import { UserService } from '../../user/user.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService , private userService : UserService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: 'secret',
@@ -15,7 +16,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   //! once we rejester the startegy in authModule , and guard routes .
   // the constructor will verify the token and return the decoded payload if it was valid .
-  validate(payload) {
-    return payload;
+  async validate(payload) {
+    const user = await this.userService.findOne(payload.username);
+    console.log('user after validation', user);
+    
+    return user;
   }
 }

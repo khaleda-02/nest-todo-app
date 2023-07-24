@@ -1,39 +1,33 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
-import { InjectModel } from '@nestjs/sequelize';
 import { Todo } from './todo.model';
+import { TODOS_REPOSITORY } from '../shared/constants';
 
 @Injectable()
 export class TodosService {
-  constructor(
-    @InjectModel(Todo)
-    private todoModel: typeof Todo,
-  ) {}
+  constructor(@Inject(TODOS_REPOSITORY) private readonly todoRepository: typeof Todo) { }
+
 
   async create(user_id: string, todoObj: CreateTodoDto) {
-    //TODO : is checking of todo existing for this user needed ?
-    return await this.todoModel.create({ ...todoObj, user_id });
+    return await this.todoRepository.create({ ...todoObj, user_id });
   }
 
-  async findAll(): Promise<Todo[]> {
-    //Todo : validate the user_id and return his todos .
-    return await this.todoModel.findAll();
+  async findAll(user_id : number ): Promise<Todo[]> {
+    return await this.todoRepository.findAll({where:{user_id}});
   }
   async findOne(id: number): Promise<Todo> {
-    return await this.todoModel.findByPk(id);
+    return await this.todoRepository.findByPk(id);
   }
 
-  //Todo => return the updated record
   async update(
     id: number,
     updateTodoDto: UpdateTodoDto,
   ): Promise<Todo | string> {
-    const [affectedRows] = await this.todoModel.update(
+    const [affectedRows] = await this.todoRepository.update(
       { ...updateTodoDto },
-      { where: { id: id }, returning: true },
+      { where: { id }, returning: true },
     );
-    //! returning => ture -> will return the affected recodes , false -> just return the number of reacrd that affected
 
     if (affectedRows == 0) {
       throw new NotFoundException('Todo  not found');
@@ -42,7 +36,7 @@ export class TodosService {
   }
 
   async remove(id: number): Promise<string> {
-    const numOfDeltedRecords = await this.todoModel.destroy({ where: { id } });
+    const numOfDeltedRecords = await this.todoRepository.destroy({ where: { id } });
     if (!numOfDeltedRecords) throw new NotFoundException('Todo  not found');
     return `success deleted ${id}`;
   }

@@ -8,7 +8,8 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local.guard';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { Public } from '../shared/decorators/access.decorator';
 
 //! local strategy for authntecate user and just return the user data
 //! jwt   startegy just for verifing tokens (sign token after local startegy returns user is done by jwtModule in autModule .)
@@ -16,16 +17,17 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req) {
     // at this point , the user is logged in (by guard) , so just create and return the token
     return this.authService.login(req.user);
-  }
-
+  }  
+  
+  @Public()
   @Post('register')
   register(@Body() createUserDto: CreateUserDto) {
-    console.log('in register endpoint,', createUserDto);
-    return this.authService.register(createUserDto);
+    return this.authService.register(createUserDto); 
   }
 }

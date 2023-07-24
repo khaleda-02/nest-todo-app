@@ -7,7 +7,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { User } from './../user/user.model';
-@Table
+@Table({tableName : 'todos'})
 export class Todo extends Model {
   @PrimaryKey
   @Column({ autoIncrement: true })
@@ -27,10 +27,14 @@ export class Todo extends Model {
   @Column({ defaultValue: '' })
   discription: string;
 
-  @Column({ defaultValue: false })
+  @Column({ defaultValue: false , field : 'is_done'})
   isDone: boolean;
 
+  @ForeignKey(()=> User)
   @Column
   user_id: string;
+
+  @BelongsTo(()=>User)
+  user:User ;
   
 }
