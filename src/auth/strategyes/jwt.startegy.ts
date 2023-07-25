@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
@@ -17,9 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   //! once we rejester the startegy in authModule , and guard routes .
   // the constructor will verify the token and return the decoded payload if it was valid .
   async validate(payload) {
-    const user = await this.userService.findOne(payload.username);
-    console.log('user after validation', user);
-    
-    return user;
+    const {password , ...rest} = await this.userService.findOne(payload.username);
+    return rest;
   }
 }

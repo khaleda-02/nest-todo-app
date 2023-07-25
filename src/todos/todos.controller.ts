@@ -7,28 +7,26 @@ import {
   Param,
   ParseIntPipe,
   Delete,
-  Request,
-  UseGuards,
 } from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
+import { User } from '../common/decorators/user.decorator';
 
 // @UseGuards(JwtGuard)
 @Controller('todos')
 export class TodosController {
   constructor(private readonly todosService: TodosService) {}
 
+  
   @Post()
-  create(@Body() CreateTodoDto: CreateTodoDto, @Request() req) {
-    const { id } = req.user;
-    return this.todosService.create(id, CreateTodoDto);
+  create(@Body() CreateTodoDto: CreateTodoDto,  @User() user ) {
+    return this.todosService.create(user.id, CreateTodoDto);
   }
 
   @Get()
-  findAll( @Request() req) {
-    const { id } = req.user;
-    return this.todosService.findAll(id);
+  findAll( @User() user) {
+    return this.todosService.findAll(user.id);
   }
 
   @Get(':id')

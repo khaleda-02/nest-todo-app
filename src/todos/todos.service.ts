@@ -2,20 +2,21 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from './todo.model';
-import { TODOS_REPOSITORY } from '../shared/constants';
+import { TODOS_REPOSITORY } from '../common/constants';
 
 @Injectable()
 export class TodosService {
   constructor(@Inject(TODOS_REPOSITORY) private readonly todoRepository: typeof Todo) { }
 
 
-  async create(user_id: string, todoObj: CreateTodoDto) {
-    return await this.todoRepository.create({ ...todoObj, user_id });
+  async create(userId: string, todoObj: CreateTodoDto) {
+    return await this.todoRepository.create({ ...todoObj, userId });
   }
 
   async findAll(user_id : number ): Promise<Todo[]> {
     return await this.todoRepository.findAll({where:{user_id}});
   }
+  
   async findOne(id: number): Promise<Todo> {
     return await this.todoRepository.findByPk(id);
   }

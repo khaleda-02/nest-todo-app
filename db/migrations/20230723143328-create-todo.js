@@ -1,8 +1,9 @@
+/* eslint-disable no-undef */
 'use strict';
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('todos',{
+    return queryInterface.createTable('Todos',{
       id:{
         type:Sequelize.INTEGER  ,
         allowNull: false ,
@@ -33,24 +34,28 @@ module.exports = {
         type: Sequelize.INTEGER ,
         allowNull : false ,
         references : {
-          model: 'users',
+          model: 'Users',
           key:'id'
-        },
-        onUpdate: 'CASCADE', 
-        onDelete: 'CASCADE',
+        }
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-      }
+      },
+      deleted_at: {
+        allowNull: true,
+        type: Sequelize.DATE
+      },
     })
   },
 
-  down: (queryInterface, Sequelize) => {}
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('Todos');
+  }
 };

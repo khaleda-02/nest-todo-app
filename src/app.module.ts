@@ -5,9 +5,10 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { DatabaseModule } from './database/database.module';
 
+import configFile from '../config'
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true , load:configFile}),
     DatabaseModule,
     TodosModule,
     AuthModule,

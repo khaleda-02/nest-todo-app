@@ -5,17 +5,18 @@ import {
   Model,
   PrimaryKey,
   Table,
+  DataType
 } from 'sequelize-typescript';
 import { User } from './../user/user.model';
-@Table({tableName : 'todos'})
+
+const { DATE} = DataType;
+@Table({ underscored: true , paranoid:true , tableName:'Todos'})
 export class Todo extends Model {
   @PrimaryKey
-  @Column({ autoIncrement: true })
+  @Column
   id: number;
 
-  //!({ defaultValue: Date.now() }) ==> it will gives all new recode , the time of the server started
-  //! ({ defaultValue:Date.now() + 10 * 60 * 1000}) ==> it's work , but it's gives you an date as int formate
-  @Column({ defaultValue: () => new Date(Date.now() + 10 * 60 * 1000) })
+  @Column(DATE)
   deadline: Date;
 
   @Column
@@ -27,14 +28,22 @@ export class Todo extends Model {
   @Column({ defaultValue: '' })
   discription: string;
 
-  @Column({ defaultValue: false , field : 'is_done'})
+  @Column({ defaultValue: false})
   isDone: boolean;
 
   @ForeignKey(()=> User)
   @Column
-  user_id: string;
+  userId: number;
 
   @BelongsTo(()=>User)
   user:User ;
   
+  @Column(DATE)
+  createdAt: Date;
+
+  @Column(DATE)
+  updatedAt: Date;
+
+  @Column(DATE)
+  deletedAt: Date;
 }

@@ -2,7 +2,7 @@ import { BadRequestException, Inject, Injectable, UnauthorizedException } from '
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.model';
-import { USER_REPOSITORY } from '../shared/constants/index';
+import { USER_REPOSITORY } from '../common/constants/index';
 
 @Injectable()
 export class UserService {
@@ -14,23 +14,24 @@ export class UserService {
   async create(createUserDto: CreateUserDto) : Promise<User | null > {
     //todo -> encrypt password
     try{
-      const { dataValues: user } = await this.userRepository.create({
+      const user = await this.userRepository.create({
         ...createUserDto,
       });
-      return user;
+      return user.dataValues;
     }catch(err){throw new BadRequestException();}
   }
   
   async findOne(username: string): Promise<User | null > {
-    const {dataValues : user} = await this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: { username },
     });
+
     if (!user) {
       throw new UnauthorizedException({ statusCode : 401 ,
         message : 'wrong username or password'
       });
     }
-    return user;
+    return user.dataValues;
   }
 
   // todo

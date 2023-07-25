@@ -15,9 +15,8 @@ export class AuthService {
   async validateUser(username: string, password: string) {
     const user = await this.userService.findOne(username);
     if (user && user.password == password) {
-      const { password, id, createdAt, updatedAt, ...rest } = user;
-      console.log(rest , ' in validate fun , in auth service , payload of login');
-      return rest;
+      const { id , username } = user;
+      return { id , username };
     }
   }
 
@@ -29,11 +28,13 @@ export class AuthService {
   }
 
   async register(user: CreateUserDto) {
-    const { id, password, createdAt, updatedAt, ...rest } =
+    const { id, username  } =
       await this.userService.create(user);      
-      const accessToken = this.jwtService.sign(rest);
+
+      const accessToken = this.jwtService.sign({id , username });
     return {
-      ...rest,
+      id ,
+       username ,
       accessToken 
     };
   }

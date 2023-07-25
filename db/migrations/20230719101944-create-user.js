@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('users', {
+    return queryInterface.createTable('Users', {
       id: {
         type: Sequelize.INTEGER ,
         allowNull: false,
@@ -30,10 +31,15 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-      }
+      },
+      deleted_at: {
+        allowNull: true,
+        type: Sequelize.DATE
+      },
     });
   },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('users');
+    return queryInterface.dropTable('Users');
   }
 };

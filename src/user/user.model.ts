@@ -1,32 +1,34 @@
-import { Column, HasMany, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
 import { Todo } from '../todos/todo.model';
 
-@Table({
-  tableName : 'users'
-})
+const {DATE } = DataType;
+
+@Table({underscored : true , paranoid : true , tableName:'Users'})
 export class User extends Model {
   @PrimaryKey
-  @Column({ autoIncrement: true })
+  @Column 
   id: number;
 
-  //? @Unique ==> no user with many username and one email (dpend on business requirements)
-  @Column({allowNull : false})
+  @Column
   email: string;
 
   @Unique
-  @Column({allowNull : false})
+  @Column
   username: string;
 
-  @Column({allowNull : false})
+  @Column
   password: string;
 
   @HasMany(()=>Todo)
   todos : Todo[];
 
-  @Column({ field: 'created_at' })
+  @Column(DATE)
   createdAt: Date;
 
-  @Column({ field: 'updated_at' })
+  @Column(DATE)
   updatedAt: Date;
+
+  @Column(DATE)
+  deletedAt: Date;
 }
  
