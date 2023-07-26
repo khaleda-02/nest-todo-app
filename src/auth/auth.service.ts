@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../user/dto/create-user.dto';
+import { LoginDto } from './dto/login.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -9,32 +10,28 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  //! with passport , don't return any exception , it will handle it
-  //? if validateUser don't return any thing it will return exception
-  //? and if the user was vaild , it will handle it also , you just need to return the user if founded
-  async validateUser(username: string, password: string) {
+  async login({username , password} : LoginDto) {
     const user = await this.userService.findOne(username);
+
     if (user && user.password == password) {
       const { id , username } = user;
-      return { id , username };
+      const accessToken = this.jwtService.sign({id , username });
+      return {
+        accessToken
+      };
     }
-  }
-
-  login(payload) {
-    const accessToken = this.jwtService.sign(payload);
-    return {
-      accessToken
-    };
+    throw new UnauthorizedException();
   }
 
   async register(user: CreateUserDto) {
     const { id, username  } =
       await this.userService.create(user);      
+      console.log(id , username , 'in register fun ');
 
-      const accessToken = this.jwtService.sign({id , username });
+    const accessToken = this.jwtService.sign({id , username });
     return {
       id ,
-       username ,
+      username ,
       accessToken 
     };
   }

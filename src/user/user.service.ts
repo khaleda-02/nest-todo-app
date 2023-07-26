@@ -14,9 +14,13 @@ export class UserService {
   async create(createUserDto: CreateUserDto) : Promise<User | null > {
     //todo -> encrypt password
     try{
+      console.log(createUserDto , 'craetauserDto');
+      
       const user = await this.userRepository.create({
         ...createUserDto,
       });
+      console.log('in createuser service ', user );
+      
       return user.dataValues;
     }catch(err){throw new BadRequestException();}
   }
