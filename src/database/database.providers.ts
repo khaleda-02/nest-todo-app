@@ -13,7 +13,6 @@ export const dbProviders = [
       const config = configService.get('database');
       const sequelize = new Sequelize(config);
       sequelize.addModels([User, Todo]);
-      await sequelize.sync();
       return sequelize;
     },
     

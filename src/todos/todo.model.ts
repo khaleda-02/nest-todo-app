@@ -9,30 +9,30 @@ import {
 } from 'sequelize-typescript';
 import { User } from './../user/user.model';
 
-const { DATE} = DataType;
+const { DATE, STRING , NUMBER}  = DataType;
 @Table({ underscored: true , paranoid:true , tableName:'Todos'})
 export class Todo extends Model {
   @PrimaryKey
-  @Column
+  @Column(NUMBER)
   id: number;
 
   @Column(DATE)
   deadline: Date;
 
-  @Column
+  @Column(STRING)
   catergory: string;
 
-  @Column
+  @Column(STRING)
   title: string;
 
-  @Column({ defaultValue: '' })
+  @Column({ type : STRING , defaultValue: '' })
   discription: string;
 
-  @Column({ defaultValue: false})
+  @Column({ type : STRING , defaultValue: false})
   isDone: boolean;
 
   @ForeignKey(()=> User)
-  @Column
+  @Column(NUMBER)
   userId: number;
 
   @BelongsTo(()=>User)
