@@ -8,12 +8,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.model';
 import { USER_REPOSITORY } from '../common/constants/index';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
   constructor(
-    @Inject(USER_REPOSITORY)
-    private userRepository: typeof User,
+    // @Inject(USER_REPOSITORY)
+    // private userRepository: typeof User,
+    private readonly userRepository: Repository<User>,
+
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User | null> {
@@ -26,7 +29,7 @@ export class UserService {
     const user = await this.userRepository.create({
       ...createUserDto,
     });
-    return user ? user.get({ plain: true }) : null;
+    return user ;
   }
 
   async findOne(username: string): Promise<User | null> {
@@ -40,7 +43,7 @@ export class UserService {
         message: 'wrong username or password',
       });
     }
-    return user.dataValues;
+    return user;
   }
 
   // TODO
