@@ -1,34 +1,28 @@
-import { Column, DataType, HasMany, Model, PrimaryKey, Table, Unique } from 'sequelize-typescript';
-import { Todo } from '../todos/todo.model';
-
-const {DATE, NUMBER ,STRING } = DataType;
-
-@Table({underscored : true , paranoid : true , tableName:'Users'})
-export class User extends Model {
-  @PrimaryKey
-  @Column(NUMBER)
+import { Todo } from 'src/todos/todo.model';
+import { Column, UpdateDateColumn, CreateDateColumn, OneToMany, PrimaryGeneratedColumn, Entity } from 'typeorm';
+@Entity({ name: 'Users' })
+export class User {
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column(STRING)
+  @Column()
   email: string;
 
-  @Unique
-  @Column(STRING)
+  @Column({unique: true })
   username: string;
 
-  @Column(STRING)
+  @Column()
   password: string;
 
-  @HasMany(()=>Todo)
-  todos : Todo[];
+  @OneToMany(() => Todo, (todo) => todo.user)
+  todos: Todo[];
 
-  @Column(DATE)
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column(DATE)
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column(DATE)
+  @Column()
   deletedAt: Date;
 }
- 

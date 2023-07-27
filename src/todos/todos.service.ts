@@ -3,42 +3,46 @@ import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from './todo.model';
 import { TODOS_REPOSITORY } from '../common/constants';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TodosService {
-  constructor(@Inject(TODOS_REPOSITORY) private readonly todoRepository: typeof Todo) { }
+  constructor(
+    // @Inject(TODOS_REPOSITORY) private readonly todoRepository: typeof Todo
+  private readonly todoRepository: Repository<Todo>,
+  ) { }
 
 
-  async create(userId: string, todoObj: CreateTodoDto) {
+  async create(userId:number, todoObj: CreateTodoDto) {
     return await this.todoRepository.create({ ...todoObj, userId });
   }
 
-  async findAll(user_id : number ): Promise<Todo[]> {
-    return await this.todoRepository.findAll({where:{user_id}});
+  async findAll(userId : number ): Promise<Todo[]> {
+    return await this.todoRepository.find({where:{userId}});
   }
   
   async findOne(id: number): Promise<Todo> {
-    return await this.todoRepository.findByPk(id);
+    return await this.todoRepository.findOne({where:{id}});
   }
 
-  async update(
-    id: number,
-    updateTodoDto: UpdateTodoDto,
-  ): Promise<Todo | string> {
-    const [affectedRows] = await this.todoRepository.update(
-      { ...updateTodoDto },
-      { where: { id }, returning: true },
-    );
-
-    if (affectedRows == 0) {
-      throw new NotFoundException('Todo  not found');
+  async update(id: number, updateTodoDto: UpdateTodoDto): Promise<Todo | string> {
+    const todo = await this.todoRepository.findOne({where:{id}});
+    if (!todo) {
+      throw new NotFoundException('Todo not found');
     }
-    return `success updated ${id}`;
+
+    Object.assign(todo, updateTodoDto);
+
+    await this.todoRepository.save(todo);
+    return `Success updated ${id}`;
   }
 
   async remove(id: number): Promise<string> {
-    const numOfDeltedRecords = await this.todoRepository.destroy({ where: { id } });
-    if (!numOfDeltedRecords) throw new NotFoundException('Todo  not found');
-    return `success deleted ${id}`;
+    const result = await this.todoRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException('Todo not found');
+    }
+
+    return `Success deleted ${id}`;
   }
 }

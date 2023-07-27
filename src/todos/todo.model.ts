@@ -1,49 +1,40 @@
-import {
-  BelongsTo,
-  Column,
-  ForeignKey,
-  Model,
-  PrimaryKey,
-  Table,
-  DataType
-} from 'sequelize-typescript';
 import { User } from './../user/user.model';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
 
-const { DATE, STRING , NUMBER}  = DataType;
-@Table({ underscored: true , paranoid:true , tableName:'Todos'})
-export class Todo extends Model {
-  @PrimaryKey
-  @Column(NUMBER)
+@Entity({ name:'Todos'})
+export class Todo  {
+  @PrimaryGeneratedColumn()
+  @Column()
   id: number;
 
-  @Column(DATE)
+  @Column()
   deadline: Date;
 
-  @Column(STRING)
+  @Column()
   catergory: string;
 
-  @Column(STRING)
+  @Column()
   title: string;
 
-  @Column({ type : STRING , defaultValue: '' })
+  @Column({ type : String , default: '' })
   discription: string;
 
-  @Column({ type : STRING , defaultValue: false})
+  @Column({ type : String, default: false})
   isDone: boolean;
 
-  @ForeignKey(()=> User)
-  @Column(NUMBER)
-  userId: number;
-
-  @BelongsTo(()=>User)
+  @ManyToOne(()=> User , (user)=>user.todos)
+  @JoinColumn({ name: 'userId' }) 
   user:User ;
+
+  @Column()
+  userId: number;
   
-  @Column(DATE)
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column(DATE)
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column(DATE)
+  @Column()
   deletedAt: Date;
 }
