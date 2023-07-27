@@ -1,21 +1,21 @@
-import { Todo } from '../todos/todo.model';
-import { User } from '../user/user.model';
-import { Sequelize } from 'sequelize-typescript';
-import { SEQUELIZE} from '../common/constants'; 
+import { DATA_SOURCE } from '../common/constants'; 
 import { Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Todo } from '../todos/todo.model';
+import { User } from '../user/user.model';
+import { DataSource } from 'typeorm';
+import dataSource from '../../config/migrate';
 
 
 export const dbProviders = [
   {
-    provide: SEQUELIZE,
+    provide:DATA_SOURCE,
     useFactory: async (configService: ConfigService) => {
-      const config = configService.get('database');
-      const sequelize = new Sequelize(config);
-      sequelize.addModels([User, Todo]);
-      return sequelize;
+      // const config = configService.get('database');
+      // const dataSource = new DataSource({...config });
+      return dataSource.initialize();
     },
-    
     inject: [ConfigService],
   },
 ];
+

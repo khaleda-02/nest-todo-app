@@ -5,4 +5,5 @@ export const PRODUCTION = 'production';
 export const USER_REPOSITORY = 'USER_REPOSITORY';
 export const TODOS_REPOSITORY = 'TODOS_REPOSITORY'; 
 export const IS_PUBLIC_KEY = 'isPublic';
+export const DATA_SOURCE = 'DATA_SOURCE'
 export const ROLES_KEY = 'roles'

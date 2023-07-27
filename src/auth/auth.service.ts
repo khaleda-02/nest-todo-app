@@ -1,10 +1,11 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 @Injectable()
 export class AuthService {
+  private logger = new Logger(AuthService.name);
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
@@ -24,14 +25,12 @@ export class AuthService {
   }
 
   async register(user: CreateUserDto) {
-    const { id, username  } =
+    const newUser   =
       await this.userService.create(user);      
-      console.log(id , username , 'in register fun ');
 
-    const accessToken = this.jwtService.sign({id , username });
+    const accessToken = this.jwtService.sign({username : newUser.username });
     return {
-      id ,
-      username ,
+      data : newUser ,
       accessToken 
     };
   }

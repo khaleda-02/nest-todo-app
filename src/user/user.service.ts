@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -12,24 +13,23 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
+  private logger = new Logger(UserService.name);
   constructor(
-    // @Inject(USER_REPOSITORY)
-    // private userRepository: typeof User,
-    private readonly userRepository: Repository<User>,
-
+      @Inject(USER_REPOSITORY)
+      private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User | null> {
+  async create(createUserDto: CreateUserDto){
     const userExist = await this.userRepository.findOne({
       where: { username: createUserDto.username },
     });
-
     if (userExist) throw new BadRequestException('user alread exit');
-
-    const user = await this.userRepository.create({
+    
+    const {password , ...user} = await this.userRepository.save({
       ...createUserDto,
     });
-    return user ;
+    
+   return user ;
   }
 
   async findOne(username: string): Promise<User | null> {

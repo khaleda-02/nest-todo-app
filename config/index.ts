@@ -11,3 +11,9 @@ try{
   currentConfig = config;
 }catch(err){}
 export default [defaultConfig , currentConfig]
+
+
+// make a file that return a data source , and test the migration:run if it's run :
+//! create a config foleder from scratch like the video 
+//? update dbProvider 
+//! make the index in config return a datasource , for 

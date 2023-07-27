@@ -1,8 +1,8 @@
-import { Todo } from 'src/todos/todo.model';
-import { Column, UpdateDateColumn, CreateDateColumn, OneToMany, PrimaryGeneratedColumn, Entity } from 'typeorm';
+import { Todo } from '../todos/todo.model';
+import { Column, UpdateDateColumn, CreateDateColumn, OneToMany, PrimaryGeneratedColumn, Entity ,ObjectIdColumn} from 'typeorm';
 @Entity({ name: 'Users' })
 export class User {
-  @PrimaryGeneratedColumn()
+  @ObjectIdColumn()
   id: number;
 
   @Column()
@@ -17,12 +17,12 @@ export class User {
   @OneToMany(() => Todo, (todo) => todo.user)
   todos: Todo[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({name : 'created_at'})
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({name : 'updated_at'})
   updatedAt: Date;
 
-  @Column()
+  @Column({name : 'deleted_at'})
   deletedAt: Date;
 }

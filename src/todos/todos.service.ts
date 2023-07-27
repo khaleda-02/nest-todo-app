@@ -8,13 +8,13 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class TodosService {
   constructor(
-    // @Inject(TODOS_REPOSITORY) private readonly todoRepository: typeof Todo
-  private readonly todoRepository: Repository<Todo>,
-  ) { }
+    @Inject(TODOS_REPOSITORY)
+    private readonly todoRepository: Repository<Todo>,
+  ) {}
 
 
   async create(userId:number, todoObj: CreateTodoDto) {
-    return await this.todoRepository.create({ ...todoObj, userId });
+    return await this.todoRepository.save({ ...todoObj, userId });
   }
 
   async findAll(userId : number ): Promise<Todo[]> {

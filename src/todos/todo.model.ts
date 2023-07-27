@@ -1,10 +1,9 @@
 import { User } from './../user/user.model';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn, ObjectIdColumn } from 'typeorm';
 
 @Entity({ name:'Todos'})
 export class Todo  {
-  @PrimaryGeneratedColumn()
-  @Column()
+  @ObjectIdColumn()
   id: number;
 
   @Column()
@@ -29,12 +28,12 @@ export class Todo  {
   @Column()
   userId: number;
   
-  @CreateDateColumn()
+  @CreateDateColumn({name : 'created_at'})
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({name : 'updated_at'})
   updatedAt: Date;
 
-  @Column()
+  @Column({name : 'deleted_at'})
   deletedAt: Date;
 }
